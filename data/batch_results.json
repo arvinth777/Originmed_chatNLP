@@ -1,0 +1,225 @@
+{
+  "metrics": {
+    "total_records": 5,
+    "successful_records": 5,
+    "average_rouge_scores": {
+      "rouge1": 0.21999251662122074,
+      "rouge2": 0.047650667723457725,
+      "rougeL": 0.12704111446251853
+    }
+  },
+  "results": [
+    {
+      "id": 1,
+      "original_source": "ruslanmv_ai_medical_chatbot",
+      "ai_output": {
+        "anonymized_text": "Patient: Hi doctor, I am just wondering what is abutting and abutment of the nerve root means in a back issue. Please explain. What treatment is required for annular bulging and tear?\n\nDoctor: Hi. I have gone through your query with diligence and would like you to know that I am here to help you. For further information consult a neurologist online -->",
+        "extracted_info": {
+          "chief_complaint": "",
+          "symptoms": [],
+          "medications": [],
+          "diagnoses": [],
+          "vitals": {}
+        },
+        "summary": "SOAP Note\n\n**Subjective:**\n\n*   Chief Complaint: None reported.\n*   Symptoms: None reported.\n*   Patient denies any current complaints.\n\n**Objective:**\n\n*   Vitals: No vitals data provided.\n*   Physical Exam: Not performed.\n\n**Assessment:**\n\n*   Patient presents with no reported chief complaint or symptoms.\n*   Further evaluation is needed to determine the patient's current health status.\n\n**Plan:**\n\n*   Obtain a complete set of vital signs.\n*   Perform a focused physical examination based on any new information.\n*   Inquire about any new or existing medical conditions, medications, and allergies.\n*   Address any identified concerns and develop an appropriate plan of care.",
+        "validation_result": {
+          "status": "FAIL",
+          "issues": [
+            "The summary does not address the patient's questions about the back issue, annular bulging, and tear.",
+            "The summary does not reflect the doctor's response to the patient's query."
+          ],
+          "missing_info": [
+            "Patient's questions about abutting and abutment of the nerve root.",
+            "Explanation of abutting and abutment of the nerve root.",
+            "Treatment for annular bulging and tear.",
+            "Doctor's response to the patient's query."
+          ],
+          "hallucinations": []
+        }
+      }
+    },
+    {
+      "id": 2,
+      "original_source": "ruslanmv_ai_medical_chatbot",
+      "ai_output": {
+        "anonymized_text": "Patient: Hi doctor, I am a 22-year-old female who was diagnosed with hypothyroidism (genetic) when I was 12. Over the past five years, I have become around 50 pounds overweight and all of my attempts to lose have seemed to fail so I have given up, but my weight has stayed the same. There is so much information put there about losing weight with hypothyroidism but it all seems to conflict. I am so unsure as to what type of exercise and diet I should follow as a result but I still would like to lose weight, but most importantly have my body feel better. What can I do? I am currently on Levothyroxine, Buspar, and Benedryl.\n\nDoctor: Hi. You have really done well with the hypothyroidism problem. Your levels are normal with less medications which are very good. As it is genetically induced, it is very difficult to lose weight. My advice to you is, you should focus on maintaining normal levels of TSH (thyroid-stimulating hormone) and try to remain active, having a positive outlook in life. Or else, it will become very difficult to balance your life with the symptoms of hypothyroidism. Even though your weight has not reduced, be very careful in not putting on weight here afterward. Everyday brisk walking for 1 hour. If you have body pain, alternate with exercises and walking. Avoid all kinds of junk foods, processed, bakery products, rich sweets, fatty foods, sodas, alcohol, and smoking. Avoid partying and binge eating. Follow the food timings properly. Have small frequent meals. In between snacks should be strictly fruits or any kind of low-calorie foods. Have unsalted nuts around five daily. It can give a glow to your dry skin. Everyday water intake should be around 1.5-2 liters. You can use flax seeds. Powder it and mix it in your food. It is a fiber which will give you fullness. Use turmeric, fenugreek seeds, or powder every day. It is a good antioxidant and fenugreek helps in reducing cholesterol levels. Include low-fat milk, curd every day. Egg white, lean chicken, or fish can be taken daily in moderation (anyone). Organ meats need to be avoided. Is your menstrual cycle normal? Please get back if you have any other complaints. Follow up after 15 days.",
+        "extracted_info": {
+          "chief_complaint": "",
+          "symptoms": [
+            "weight gain",
+            "body pain"
+          ],
+          "medications": [
+            {
+              "name": "Levothyroxine",
+              "dosage": "",
+              "frequency": ""
+            },
+            {
+              "name": "Buspar",
+              "dosage": "",
+              "frequency": ""
+            },
+            {
+              "name": "Benedryl",
+              "dosage": "",
+              "frequency": ""
+            }
+          ],
+          "diagnoses": [
+            "hypothyroidism"
+          ],
+          "vitals": {
+            "BP": "",
+            "HR": "",
+            "Temp": ""
+          }
+        },
+        "summary": "Here's a SOAP note based on the provided clinical data:\n\n**SOAP Note**\n\n**Subjective:**\n\nPatient reports weight gain and body pain.\n\n**Objective:**\n\n*   Vitals: Not provided.\n*   Medications: Levothyroxine, Buspar, and Benadryl.\n*   Diagnoses: Hypothyroidism.\n\n**Assessment:**\n\nPatient presenting with symptoms of weight gain and body pain. Hypothyroidism is a known diagnosis. Further evaluation needed to determine if symptoms are related to thyroid function or other causes.\n\n**Plan:**\n\n1.  Obtain vital signs (BP, HR, Temp).\n2.  Review medication list for appropriateness.\n3.  Order TSH and free T4 to assess thyroid function.\n4.  Discuss symptom management and potential causes of weight gain and body pain.\n5.  Schedule follow-up based on lab results and clinical findings.",
+        "validation_result": {
+          "status": "FAIL",
+          "issues": [
+            "The summary does not accurately reflect the doctor's advice regarding diet and exercise.",
+            "The summary does not include the doctor's assessment of the patient's thyroid levels and medication management.",
+            "The summary does not mention the doctor's advice on maintaining a positive outlook."
+          ],
+          "missing_info": [
+            "Doctor's advice on diet (avoiding junk food, processed foods, sweets, fatty foods, sodas, alcohol, smoking, and binge eating; following food timings; small frequent meals; fruits or low-calorie snacks; unsalted nuts; flax seeds; turmeric, fenugreek; low-fat milk, curd; egg white, lean chicken, or fish; avoiding organ meats).",
+            "Doctor's advice on exercise (brisk walking, alternating with exercises if there is body pain).",
+            "Doctor's advice on maintaining normal TSH levels.",
+            "Doctor's advice on maintaining a positive outlook.",
+            "Doctor's assessment of the patient's thyroid levels and medication management.",
+            "Doctor's question about the patient's menstrual cycle.",
+            "Doctor's follow-up instructions."
+          ],
+          "hallucinations": []
+        }
+      }
+    },
+    {
+      "id": 3,
+      "original_source": "ruslanmv_ai_medical_chatbot",
+      "ai_output": {
+        "anonymized_text": "Patient: Hi doctor! I used to have clear skin but since I moved to [LOCATION], I started to have lots of acne on my face particularly on my forehead. I thought it would disappear once I went back home, but it only got worse. I did some research and assumed that it was caused by drinking too much cow's milk, but it has been since since I stopped and they would still not go away. I also noticed that I get deep acne whenever I'm nearing my period, along with the usual small red bumps. I bought an acne soap and have been using it for a month now but I'm not sure if it works. I hope you can help me because it has been affecting my mental state lately :((((\n\nDoctor: Hi there Acne has multifactorial etiology. Only acne soap does not improve if ypu have grade 2 or more grade acne. You need to have oral and topical medications. This before writing medicines i need to confirm your grade of acne. For mild grade topical clindamycin or retenoic acud derivative would suffice whereas for higher grade acne you need oral medicines aluke doxycycline azithromycin or isotretinoin. Acne vulgaris Cleansing face with antiacne face wash",
+        "extracted_info": {
+          "chief_complaint": "acne",
+          "symptoms": [
+            "acne",
+            "red bumps"
+          ],
+          "medications": [],
+          "diagnoses": [
+            "Acne vulgaris"
+          ],
+          "vitals": {}
+        },
+        "summary": "Here's a SOAP note based on the provided clinical data:\n\n**SOAP Note**\n\n**Subjective:**\n\n*   **Chief Complaint:** Acne\n*   **History of Present Illness:** Patient reports acne with associated red bumps.\n\n**Objective:**\n\n*   **Vitals:** Not provided.\n*   **Physical Exam:** Not provided.\n\n**Assessment:**\n\n*   Acne vulgaris\n\n**Plan:**\n\n*   Further assessment needed, including a physical exam to determine the severity of acne.\n*   Discuss treatment options based on severity (e.g., topical medications, lifestyle modifications).\n*   Schedule follow-up appointment.",
+        "validation_result": {
+          "status": "FAIL",
+          "issues": [
+            "The summary does not include the patient's history of acne, including the location of the acne, the patient's attempts to treat it, and the patient's concerns about the acne.",
+            "The summary does not include the doctor's assessment of the acne, including the multifactorial etiology and the need for oral and topical medications.",
+            "The summary does not include the doctor's plan for treatment, including the need to confirm the grade of acne and the potential medications."
+          ],
+          "missing_info": [
+            "Patient's history of acne, including the location of the acne, the patient's attempts to treat it, and the patient's concerns about the acne.",
+            "Doctor's assessment of the acne, including the multifactorial etiology and the need for oral and topical medications.",
+            "Doctor's plan for treatment, including the need to confirm the grade of acne and the potential medications."
+          ],
+          "hallucinations": []
+        }
+      }
+    },
+    {
+      "id": 4,
+      "original_source": "ruslanmv_ai_medical_chatbot",
+      "ai_output": {
+        "anonymized_text": "Patient: Hello doctor, I am having an uncomfortable feeling in between the middle of my spine and left shoulder blade. It seems to get stiff, and my bones pop a lot around there, and it is very uncomfortable to sit in specific ways feels like my bones shift, well the other night it seemed as if my shoulder would pop out of place causing more stiffness after a while of dealing with it. I ended up feeling a popping sensation, where the stiffness was an instant relief. It was so shocking it put my anxiety through the roof. I thought I was going to die because my whole body was shaking and tingling. What am I dealing with? Right now I have no pain or tender near that area still relief but curious on what happened and why I got this shock and that popping feeling so loud it scared me half to death.\n\nDoctor: Hello. The popping and discomfort what you felt is either because of improper scapulothoracic mobility or may be due to facet joint irritation in the neck with intervertebral hypermobility. Which could have caused due to stiffness in the chest muscles, shoulder stiffness, etc. I would recommend you to do a lot of icing in the chest and back muscles. Maintain your neck and upper back posture by doing some back retraction work. Gently stretch your neck and chest. Gently massage your chest and shoulders to relieve tension in the muscles. I hope this is helpful for now. Kindly revert in case you need any help in this regard.",
+        "extracted_info": {
+          "chief_complaint": "uncomfortable feeling in between the middle of my spine and left shoulder blade",
+          "symptoms": [
+            "stiffness",
+            "bones pop",
+            "uncomfortable to sit",
+            "shoulder would pop out of place",
+            "popping sensation",
+            "shaking",
+            "tingling"
+          ],
+          "medications": [],
+          "diagnoses": [
+            "improper scapulothoracic mobility",
+            "facet joint irritation in the neck with intervertebral hypermobility"
+          ],
+          "vitals": {
+            "BP": "",
+            "HR": "",
+            "Temp": ""
+          }
+        },
+        "summary": "SOAP Note\n\n**Subjective:**\n\nPatient reports an \"uncomfortable feeling\" between the mid-spine and left shoulder blade. Symptoms include stiffness, popping sensations in the bones, discomfort when sitting, and a history of the shoulder \"popping out of place.\" Patient also reports shaking and tingling. No current medications.\n\n**Objective:**\n\nVitals: Not provided.\n\n**Assessment:**\n\n1.  Improper scapulothoracic mobility.\n2.  Facet joint irritation in the neck with intervertebral hypermobility.\n\n**Plan:**\n\n1.  Further evaluation may be needed, depending on the vitals.\n2.  Recommend physical therapy to address scapulothoracic mobility and neck facet joint irritation.\n3.  Educate patient on proper posture and body mechanics.\n4.  Consider imaging (X-ray or MRI) if symptoms worsen or do not improve with conservative management.\n5.  Follow up as needed.",
+        "validation_result": {
+          "status": "FAIL",
+          "issues": [
+            "The summary includes a 'Plan' section that goes beyond the information provided in the source text. The source text only provides recommendations, not a detailed plan.",
+            "The summary includes a 'Follow up as needed' in the plan, which is not explicitly mentioned in the source text.",
+            "The summary includes 'Consider imaging (X-ray or MRI) if symptoms worsen or do not improve with conservative management' in the plan, which is not explicitly mentioned in the source text.",
+            "The summary includes 'Educate patient on proper posture and body mechanics' in the plan, which is not explicitly mentioned in the source text.",
+            "The summary includes 'Recommend physical therapy to address scapulothoracic mobility and neck facet joint irritation' in the plan, which is not explicitly mentioned in the source text.",
+            "The summary includes 'Further evaluation may be needed, depending on the vitals' in the plan, which is not explicitly mentioned in the source text."
+          ],
+          "missing_info": [
+            "The summary does not include the doctor's recommendations for icing, stretching, and massage.",
+            "The summary does not include the doctor's advice to revert in case of need."
+          ],
+          "hallucinations": [
+            "The summary includes a 'Plan' section that contains information not present in the source text, such as physical therapy, imaging, and patient education."
+          ]
+        }
+      }
+    },
+    {
+      "id": 5,
+      "original_source": "ruslanmv_ai_medical_chatbot",
+      "ai_output": {
+        "anonymized_text": "Patient: Hello doctor,Before two years had sex with a call girl in a dark [LOCATION] for about 10 to15 min. I did not eject, and I am sure that she did not eject as well (not 100 % sure). Do not know if the condom broke (as it was dark) but had some liquid on my penis (maybe fluid in condom, not sure) After few days from then I had cold followed by itchy skin. I took medicine from the doctor and got it resolved.After a few weeks from then, I had fever 100 F, mild night sweats, mild sore throat, slight weight loss (around four to five kg). Also I feel tired most of times. After 50 days, I got an HIV blood test, which came out negative. Do not know the name of the test, they took blood from my fingertip, tested it using some chemical for 40 minutes, and gave a report. Doctor suggested me get the same test after three months. Now I took medicines for flu symptoms which are giving me relief. But, very worried about the situation. Will medicine I used for cold and itchy skin have impact on HIV. Was the test enough for diagnosis as I do not know the name like fourth-generation etc. Also I washed my penis after 20 minutes with water thoroughly. Please help.\n\nDoctor: Hello. The HIV test uses a finger prick blood sample, with results given within 20 minutes, and is 99 % accurate at detecting any HIV exposure that may have occurred more than 12 weeks ago. However, it can potentially pick up HIV infection from as little as four weeks ago. There is nothing to worry nothing will happen, and please repeat your test after 12 weeks. If you want accurate results to get, it has done RNA PCR which will give actual results within 10days. Antigen detection like P24 gives best results with in two to four weeks. Probably your suffering from a simple viral upper respiratory infection. After 12 weeks, please consult your doctor he will examine and treat you accordingly.",
+        "extracted_info": {
+          "chief_complaint": "Worried about HIV",
+          "symptoms": [
+            "cold",
+            "itchy skin",
+            "fever",
+            "mild night sweats",
+            "mild sore throat",
+            "slight weight loss",
+            "tiredness"
+          ],
+          "medications": [],
+          "diagnoses": [],
+          "vitals": {
+            "BP": "",
+            "HR": "",
+            "Temp": "100 F"
+          }
+        },
+        "summary": "Here's a SOAP note based on the provided clinical data:\n\n**SOAP Note**\n\n**Subjective:**\n\n*   **Chief Complaint:** Patient reports being worried about HIV.\n*   **History of Present Illness:** Patient reports symptoms including cold, itchy skin, fever (100F), mild night sweats, mild sore throat, slight weight loss, and tiredness.\n*   **Medications:** None reported.\n\n**Objective:**\n\n*   **Vitals:** Temp: 100 F, BP: Not documented, HR: Not documented.\n*   **Physical Exam:** (Requires further information - not provided in the data)\n\n**Assessment:**\n\n*   Patient presents with a constellation of symptoms concerning for possible viral illness. Patient's primary concern is HIV.\n*   Differential diagnoses include: Viral syndrome, possible early HIV infection (given patient's concern and some non-specific symptoms), other infectious etiologies.\n\n**Plan:**\n\n*   Obtain a complete history, including sexual history, risk factors for HIV, and detailed symptom onset and progression.\n*   Perform a complete physical exam.\n*   Order HIV screening (antibody/antigen test).\n*   Order CBC, CMP, and other labs as clinically indicated based on history and physical exam findings.\n*   Provide patient education regarding HIV transmission, testing, and results.\n*   Schedule follow-up appointment to discuss lab results and further management.",
+        "validation_result": {
+          "status": "FAIL",
+          "issues": [
+            "The summary does not accurately reflect the information provided in the source text. The summary is a SOAP note template, but it does not accurately represent the patient's information.",
+            "The summary includes information that is not present in the source text, such as the plan to order CBC, CMP, and other labs. The source text only mentions an HIV test.",
+            "The summary does not include the doctor's response to the patient's concerns."
+          ],
+          "missing_info": [
+            "The doctor's assessment and plan from the source text.",
+            "Details of the HIV test performed (finger prick, 20-minute result, accuracy, and timing of testing)."
+          ],
+          "hallucinations": [
+            "The entire SOAP note structure is a hallucination, as the source text is a patient-doctor interaction.",
+            "The plan to order CBC, CMP, and other labs is not mentioned in the source text."
+          ]
+        }
+      }
+    }
+  ]
+}

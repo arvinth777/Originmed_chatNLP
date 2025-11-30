@@ -1,0 +1,11 @@
+langchain
+langchain-google-genai
+python-dotenv
+pydantic
+pandas
+datasets
+streamlit
+rouge-score
+huggingface_hub
+
+tqdm

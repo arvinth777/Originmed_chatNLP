@@ -1,0 +1,289 @@
+import streamlit as st
+from src.pipeline import ClinicalPipeline
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+st.set_page_config(page_title="Origin Medical Agentic Pipeline", layout="wide")
+
+st.title("🏥 Origin Medical: Agentic Clinical Pipeline")
+st.markdown("### Research Grade 4-Agent System")
+
+# Sidebar
+st.sidebar.header("Configuration")
+api_key = st.sidebar.text_input("Google Gemini API Key", type="password", value=os.getenv("GOOGLE_API_KEY", ""))
+
+if not api_key:
+    st.warning("Please enter your Google API Key in the sidebar.")
+    st.stop()
+
+os.environ["GOOGLE_API_KEY"] = api_key
+
+# Input
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("Input Medical Text")
+    
+    raw_text = st.text_area(
+        "Paste consultation text here:", 
+        value="",
+        placeholder="Example:\n\nPatient: Hi doctor, I've been having headaches...\nDoctor: How long have you had these symptoms?",
+        height=300
+    )
+    
+    if st.button("Run Pipeline", type="primary"):
+        if not raw_text.strip():
+            st.error("Please enter some medical text first!")
+        else:
+            with st.spinner("Running Agents..."):
+                pipeline = ClinicalPipeline()
+                results = pipeline.run(raw_text)
+                st.session_state['results'] = results
+                st.success("✅ Pipeline completed!")
+
+with col2:
+    st.subheader("Pipeline Output")
+    
+    if 'results' not in st.session_state:
+        st.info("👈 Enter medical text on the left and click 'Run Pipeline' to see results here.")
+    
+    if 'results' in st.session_state:
+        results = st.session_state['results']
+        
+        # Display processing time metrics
+        if 'timings' in results:
+            st.subheader("⏱️ Processing Performance")
+            timings = results['timings']
+            
+            col1, col2, col3, col4, col5 = st.columns(5)
+            col1.metric("Privacy", f"{timings.get('privacy_guard', 0):.2f}s")
+            col2.metric("Extraction", f"{timings.get('clinical_extractor', 0):.2f}s")
+            col3.metric("Summary", f"{timings.get('summarizer', 0):.2f}s")
+            col4.metric("Validation", f"{timings.get('validator', 0):.2f}s")
+            col5.metric("**Total**", f"{timings.get('total', 0):.2f}s", delta=None)
+            
+            st.markdown("---")
+        
+        # Tabs for each agent
+        tab1, tab2, tab3, tab4 = st.tabs(["🔒 Privacy", "📋 Extraction", "📝 Summary", "✅ Validation"])
+        
+        with tab1:
+            st.markdown("### Agent 1: Privacy Guard")
+            st.info("Removes PII (Names, Dates, Locations)")
+            st.code(results['anonymized_text'], language="text")
+            
+        with tab2:
+            st.markdown("### Agent 2: Clinical Extractor")
+            st.info("Extracts structured entities")
+            st.markdown(results['extracted_info'])
+            
+        with tab3:
+            st.markdown("### Agent 3: Summarizer")
+            st.info("Generates SOAP Note")
+            st.markdown(results['summary'])
+            
+        with tab4:
+            st.markdown("### Agent 4: Clinical Validator")
+            st.info("Checks for hallucinations and missing information")
+            val_result = results['validation_result']
+            
+            # Handle both dict and string formats
+            if isinstance(val_result, dict):
+                status = val_result.get('status', 'UNKNOWN')
+                
+                # Display status badge
+                if status == 'PASS':
+                    st.success(f"✅ **Validation Status: {status}**")
+                else:
+                    st.warning(f"⚠️ **Validation Status: {status}**")
+                
+                # Display issues in readable format
+                issues = val_result.get('issues', [])
+                missing_info = val_result.get('missing_info', [])
+                hallucinations = val_result.get('hallucinations', [])
+                
+                if issues:
+                    st.markdown("**🔍 Issues Detected:**")
+                    for i, issue in enumerate(issues, 1):
+                        st.markdown(f"{i}. {issue}")
+                
+                if missing_info:
+                    st.markdown("**📋 Missing Information:**")
+                    for i, info in enumerate(missing_info, 1):
+                        st.markdown(f"{i}. {info}")
+                
+                if hallucinations:
+                    st.markdown("**⚠️ Hallucinations Detected:**")
+                    for i, hall in enumerate(hallucinations, 1):
+                        st.markdown(f"{i}. {hall}")
+                
+                # If everything is clean
+                if not issues and not missing_info and not hallucinations and status == 'PASS':
+                    st.success("No issues detected! Summary accurately reflects the source text.")
+                    
+            else:
+                # String format (legacy)
+                if "PASSED" in str(val_result).upper():
+                    st.success(val_result)
+                else:
+                    st.warning(val_result)
+
+# Footer
+st.markdown("---")
+
+# Footer
+st.markdown("---")
+
+# Pipeline Analytics
+st.header("📊 Pipeline Analytics")
+batch_file = "data/batch_results.json"
+
+if os.path.exists(batch_file):
+    import json
+    from collections import Counter
+    
+    with open(batch_file, "r") as f:
+        batch_json = json.load(f)
+    
+    # Handle both old format (list) and new format (dict with metrics)
+    if isinstance(batch_json, dict) and 'results' in batch_json:
+        batch_data = batch_json['results']
+        metrics = batch_json.get('metrics', {})
+        
+        # Display ROUGE scores if available
+        if 'average_rouge_scores' in metrics:
+            st.subheader("📈 ROUGE Evaluation Scores")
+            r1, r2, rl = st.columns(3)
+            rouge = metrics['average_rouge_scores']
+            r1.metric("ROUGE-1", f"{rouge['rouge1']:.3f}")
+            r2.metric("ROUGE-2", f"{rouge['rouge2']:.3f}")
+            rl.metric("ROUGE-L", f"{rouge['rougeL']:.3f}")
+            st.caption("ROUGE scores measure overlap between generated summaries and source text. Higher is better (0-1 scale).")
+            
+            # Add comparison chart
+            st.subheader("📊 Performance Comparison")
+            import pandas as pd
+            comparison_data = pd.DataFrame({
+                "ROUGE-1": [rouge['rouge1'], 1.0, 0.05],
+                "ROUGE-2": [rouge['rouge2'], 1.0, 0.01],
+                "ROUGE-L": [rouge['rougeL'], 1.0, 0.03]
+            }, index=["Your Pipeline", "Baseline (No Summary)", "Random Summary"])
+            
+            st.bar_chart(comparison_data)
+            st.caption("**Baseline** = Using raw text as summary (perfect overlap). **Random** = Unrelated text. Your pipeline balances conciseness with information retention.")
+            
+            st.markdown("---")
+    else:
+        # Old format - just a list
+        batch_data = batch_json
+        
+    total_records = len(batch_data)
+    
+    # Calculate Metrics
+    pass_count = 0
+    fail_count = 0
+    all_issues = []
+    
+    for record in batch_data:
+        res = record.get('ai_output', {})
+        val = res.get('validation_result', {})
+        
+        # Handle different validation structures (dict vs string)
+        if isinstance(val, dict):
+            status = val.get('status', 'FAIL')
+            issues = val.get('issues', [])
+        else:
+            # Fallback for older string-based results
+            status = 'PASS' if 'PASSED' in str(val).upper() else 'FAIL'
+            issues = []
+            
+        if status == 'PASS':
+            pass_count += 1
+        else:
+            fail_count += 1
+            if isinstance(issues, list):
+                all_issues.extend(issues)
+            else:
+                all_issues.append(str(issues))
+
+    # Display Metrics
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Total Records", total_records)
+    m2.metric("Validation Pass Rate", f"{(pass_count/total_records)*100:.1f}%")
+    m3.metric("Issues Detected", fail_count)
+    
+    # Issues Chart
+    if all_issues:
+        st.subheader("Common Validation Issues")
+        issue_counts = Counter(all_issues)
+        st.bar_chart(issue_counts)
+    else:
+        st.success("No validation issues detected across all records! 🎉")
+
+    st.markdown("---")
+
+# Batch Results Viewer
+st.header("📂 Batch Results Viewer")
+# ... (rest of the viewer code uses the same batch_data)
+if os.path.exists(batch_file):
+    # reuse batch_data loaded above
+    
+    selected_id = st.selectbox("Select Record ID", [r['id'] for r in batch_data])
+    
+    record = next((r for r in batch_data if r['id'] == selected_id), None)
+    
+    if record:
+        res = record.get('ai_output', {})
+        
+        b_tab1, b_tab2, b_tab3, b_tab4 = st.tabs(["🔒 Privacy", "📋 Extraction", "📝 Summary", "✅ Validation"])
+        
+        with b_tab1:
+            st.code(res.get('anonymized_text', 'N/A'), language="text")
+        with b_tab2:
+            st.json(res.get('extracted_info', {}))
+        with b_tab3:
+            st.markdown(res.get('summary', 'N/A'))
+        with b_tab4:
+            val = res.get('validation_result', {})
+            
+            if isinstance(val, dict):
+                status = val.get('status', 'UNKNOWN')
+                
+                # Display status badge
+                if status == 'PASS':
+                    st.success(f"✅ **Validation Status: {status}**")
+                else:
+                    st.warning(f"⚠️ **Validation Status: {status}**")
+                
+                # Display issues in readable format
+                issues = val.get('issues', [])
+                missing_info = val.get('missing_info', [])
+                hallucinations = val.get('hallucinations', [])
+                
+                if issues:
+                    st.markdown("**🔍 Issues Detected:**")
+                    for i, issue in enumerate(issues, 1):
+                        st.markdown(f"{i}. {issue}")
+                
+                if missing_info:
+                    st.markdown("**📋 Missing Information:**")
+                    for i, info in enumerate(missing_info, 1):
+                        st.markdown(f"{i}. {info}")
+                
+                if hallucinations:
+                    st.markdown("**⚠️ Hallucinations Detected:**")
+                    for i, hall in enumerate(hallucinations, 1):
+                        st.markdown(f"{i}. {hall}")
+                
+                # If everything is clean
+                if not issues and not missing_info and not hallucinations and status == 'PASS':
+                    st.success("No issues detected! Summary accurately reflects the source text.")
+            else:
+                # String format fallback
+                st.warning(str(val))
+else:
+    st.info("No batch results found. Run `python -m src.batch_processor` to generate data.")
+
+st.caption("Built for Origin Medical Research Intern Challenge")

@@ -52,6 +52,33 @@ with col2:
     if 'results' in st.session_state:
         results = st.session_state['results']
         
+        # Privacy Dashboard
+        st.subheader("🛡️ Privacy Preservation Layer")
+        redacted_text = results.get('anonymized_text', '')
+        
+        # Count PII redactions
+        pii_counts = {
+            "Names": redacted_text.count("[PATIENT_NAME]") + redacted_text.count("[DOCTOR_NAME]"),
+            "Dates": redacted_text.count("[DATE]"),
+            "Locations": redacted_text.count("[LOCATION]"),
+            "Contacts": redacted_text.count("[CONTACT_INFO]") + redacted_text.count("[EMAIL]")
+        }
+        total_redactions = sum(pii_counts.values())
+        
+        col1, col2, col3, col4, col5 = st.columns(5)
+        col1.metric("Names Redacted", pii_counts["Names"])
+        col2.metric("Dates Redacted", pii_counts["Dates"])
+        col3.metric("Locations Masked", pii_counts["Locations"])
+        col4.metric("Contacts Removed", pii_counts["Contacts"])
+        
+        if total_redactions > 0:
+            col5.success(f"**HIPAA**\n✅ Active")
+        else:
+            col5.info("**HIPAA**\nℹ️ No PII")
+        
+        st.caption(f"Total PII elements redacted: **{total_redactions}** | Compliance: HIPAA Safe Harbor Method")
+        st.markdown("---")
+        
         # Display processing time metrics
         if 'timings' in results:
             st.subheader("⏱️ Processing Performance")

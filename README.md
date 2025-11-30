@@ -58,52 +58,25 @@ The system processes real medical dialogue data from Hugging Face and includes r
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────┐
-│  Raw Medical    │
-│   Dialogue      │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────────────────────────┐
-│  Agent 0: Language Translator       │
-│  • Detects source language          │
-│  • Translates to English            │
-└────────┬────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────┐
-│  Agent 1: Privacy Guard             │
-│  • Removes PII (names, dates, etc.) │
-│  • Regex fallback for safety        │
-└────────┬────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────┐
-│  Agent 2: Clinical Extractor        │
-│  • Extracts structured entities     │
-│  • JSON output with validation      │
-└────────┬────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────┐
-│  Agent 3: SOAP Summarizer           │
-│  • Generates clinical SOAP notes    │
-│  • Uses structured data from Agent 2│
-└────────┬────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────┐
-│  Agent 4: Clinical Validator        │
-│  • Detects hallucinations           │
-│  • Identifies missing information   │
-└────────┬────────────────────────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Final Output   │
-│  + Validation   │
-└─────────────────┘
+```mermaid
+graph TD
+    A[Raw Medical Dialogue] -->|Input| B{Agent 0: Language Translator}
+    B -->|Non-English| C[Translated English Text]
+    B -->|English| D[English Text]
+    C --> D
+    D --> E[Agent 1: Privacy Guard]
+    E -->|Anonymize| F[Anonymized Text]
+    F --> G[Agent 2: Clinical Extractor]
+    G -->|Extract Entities| H[Structured JSON Data]
+    H --> I[Agent 3: SOAP Summarizer]
+    I -->|Generate Note| J[SOAP Note Draft]
+    J --> K[Agent 4: Clinical Validator]
+    F -->|Source Context| K
+    K -->|Validate| L[Final Validated Output]
+    
+    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style L fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style K fill:#fff9c4,stroke:#fbc02d,stroke-width:2px
 ```
 
 ---

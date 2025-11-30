@@ -8,11 +8,12 @@
 
 ## 1. Executive Summary
 
-This report presents a **research-grade, multi-agent AI pipeline** designed to process medical dialogues and generate structured clinical summaries while preventing hallucinations. The system implements a 4-agent architecture using Google Gemini LLMs, processes real-world medical conversation data from Hugging Face, and includes robust validation mechanisms to ensure clinical accuracy.
+This report presents a **research-grade, multi-agent AI pipeline** designed to process medical dialogues and generate structured clinical summaries while preventing hallucinations. The system implements a 5-agent architecture using Google Gemini LLMs, processes real-world medical conversation data from Hugging Face, and includes robust validation mechanisms to ensure clinical accuracy.
 
 **Key Achievements:**
-- ✅ 4-agent sequential pipeline (Privacy → Extraction → Summarization → Validation)
+- ✅ 5-agent sequential pipeline (Translation → Privacy → Extraction → Summarization → Validation)
 - ✅ Real medical dialogue dataset integration (ruslanmv/ai-medical-chatbot)
+- ✅ Multilingual support via dedicated Translation Agent
 - ✅ Validation agent with hallucination detection
 - ✅ Robust error handling with regex fallbacks and retries
 - ✅ Interactive Streamlit dashboard with analytics
@@ -24,13 +25,20 @@ This report presents a **research-grade, multi-agent AI pipeline** designed to p
 
 ### 2.1 System Architecture
 
-The pipeline implements a **sequential 4-agent design** where each agent has a specialized responsibility:
+The pipeline implements a **sequential 5-agent design** where each agent has a specialized responsibility:
 
 ```
 ┌─────────────────┐
 │  Raw Medical    │
 │   Dialogue      │
 └────────┬────────┘
+         │
+         ▼
+┌─────────────────────────────────────┐
+│  Agent 0: Language Translator       │
+│  • Detects source language          │
+│  • Translates to English            │
+└────────┬────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────┐
@@ -70,6 +78,11 @@ The pipeline implements a **sequential 4-agent design** where each agent has a s
 ```
 
 ### 2.2 Agent Design Details
+
+#### **Agent 0: Language Translator**
+- **Purpose:** Enables multilingual support
+- **Function:** Detects non-English input and translates to professional medical English
+- **Preservation:** Strictly preserves medical terms and numbers
 
 #### **Agent 1: Privacy Guard**
 - **Purpose:** HIPAA-compliant PII removal

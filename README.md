@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **Origin Medical Research Internship Submission**  
-> A 4-agent AI pipeline that processes medical dialogues, generates structured SOAP notes, and validates outputs to prevent hallucinations.
+> A 5-agent AI pipeline that processes medical dialogues, generates structured SOAP notes, and validates outputs to prevent hallucinations.
 
 ---
 
@@ -27,10 +27,11 @@
 ## 🎯 Overview
 
 This project implements a **multi-agent AI pipeline** designed to:
-1. **Anonymize** patient data (HIPAA-compliant PII removal)
-2. **Extract** structured clinical entities (symptoms, medications, diagnoses)
-3. **Summarize** conversations into professional SOAP notes
-4. **Validate** outputs to detect hallucinations and missing information
+1. **Translate** multilingual inputs to English (Agent 0)
+2. **Anonymize** patient data (HIPAA-compliant PII removal)
+3. **Extract** structured clinical entities (symptoms, medications, diagnoses)
+4. **Summarize** conversations into professional SOAP notes
+5. **Validate** outputs to detect hallucinations and missing information
 
 The system processes real medical dialogue data from Hugging Face and includes robust error handling, comprehensive logging, and an interactive Streamlit dashboard.
 
@@ -39,7 +40,8 @@ The system processes real medical dialogue data from Hugging Face and includes r
 ## ✨ Features
 
 ### Core Capabilities
-- ✅ **4-Agent Sequential Pipeline** (Privacy → Extract → Summarize → Validate)
+- ✅ **5-Agent Sequential Pipeline** (Translate → Privacy → Extract → Summarize → Validate)
+- ✅ **Multilingual Support** (Automatically detects and translates non-English inputs)
 - ✅ **Real Medical Data** from Hugging Face (`ruslanmv/ai-medical-chatbot`)
 - ✅ **Hallucination Detection** via dedicated validation agent
 - ✅ **ROUGE Metrics** for quantitative evaluation
@@ -61,6 +63,13 @@ The system processes real medical dialogue data from Hugging Face and includes r
 │  Raw Medical    │
 │   Dialogue      │
 └────────┬────────┘
+         │
+         ▼
+┌─────────────────────────────────────┐
+│  Agent 0: Language Translator       │
+│  • Detects source language          │
+│  • Translates to English            │
+└────────┬────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────┐

@@ -14,6 +14,19 @@ st.markdown("### Research Grade 4-Agent System")
 st.sidebar.header("Configuration")
 api_key = st.sidebar.text_input("Google Gemini API Key", type="password", value=os.getenv("GOOGLE_API_KEY", ""))
 
+# Language selector
+st.sidebar.markdown("---")
+st.sidebar.subheader("🌍 Input Language")
+source_language = st.sidebar.selectbox(
+    "Select the language of your input text:",
+    ["English", "Spanish", "French", "Hindi", "Tamil"],
+    index=0,
+    help="Agent 0 will translate non-English text to English before processing"
+)
+
+if source_language != "English":
+    st.sidebar.info(f"🔄 Translation from {source_language} will be performed by Agent 0")
+
 if not api_key:
     st.warning("Please enter your Google API Key in the sidebar.")
     st.stop()
@@ -42,7 +55,7 @@ with col1:
             try:
                 with st.spinner("Running Agents..."):
                     pipeline = ClinicalPipeline()
-                    results = pipeline.run(raw_text)
+                    results = pipeline.run(raw_text, source_language=source_language)
                     st.session_state['results'] = results
                     st.success("✅ Pipeline completed successfully!")
             except Exception as e:

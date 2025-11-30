@@ -70,6 +70,52 @@ def _llm_call_with_logging(prompt: str, system: str, temperature: float = 0.0, m
 
 
 # -------------------------
+# Agent 0: LanguageTranslator
+# -------------------------
+class LanguageTranslator:
+    SYSTEM = (
+        "You are a professional medical translator. Convert the following text into clear, professional English. "
+        "Preserve all medical terminology, numbers, and proper nouns exactly. Do not summarize; provide a full translation."
+    )
+
+    def __init__(self, max_tokens: int = 1200):
+        self.max_tokens = max_tokens
+
+    def run(self, text: str, source_language: str = "auto") -> Dict[str, Any]:
+        """
+        Translate medical conversation to English.
+        Returns dict: {'translated_text': str, 'source_language': str, 'ok': bool}
+        """
+        prompt = (
+            f"Translate this medical conversation from {source_language} to English. "
+            f"Preserve all medical terms, dosages, and clinical details exactly. "
+            f"Return ONLY the English translation (no commentary).\n\n{text}"
+        )
+        try:
+            resp = _llm_call_with_logging(
+                prompt=prompt,
+                system=self.SYSTEM,
+                temperature=0.0,
+                max_tokens=self.max_tokens
+            )
+            if not resp or len(resp.strip()) < 20:
+                raise ValueError("Translation failed or too short")
+            return {
+                "translated_text": resp.strip(),
+                "source_language": source_language,
+                "ok": True
+            }
+        except Exception as e:
+            logger.exception("LanguageTranslator failed")
+            return {
+                "translated_text": text,  # Fallback to original
+                "source_language": source_language,
+                "ok": False,
+                "error": str(e)
+            }
+
+
+# -------------------------
 # Agent: PrivacyGuard
 # -------------------------
 class PrivacyGuard:

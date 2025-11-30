@@ -1,29 +1,48 @@
-from src.agents import PrivacyGuard, ClinicalExtractor, Summarizer, Validator
+from src.agents import LanguageTranslator, PrivacyGuard, ClinicalExtractor, Summarizer, Validator
 from src.logger import log_api_call
 
 class ClinicalPipeline:
     def __init__(self):
+        self.translator_agent = LanguageTranslator()
         self.privacy_agent = PrivacyGuard()
         self.extractor_agent = ClinicalExtractor()
         self.summarizer_agent = Summarizer()
         self.validator_agent = Validator()
 
-    def run(self, raw_text: str):
+    def run(self, raw_text: str, source_language: str = "English"):
         import time
         
         print("--- Starting Clinical Pipeline ---")
         pipeline_start = time.time()
         timings = {}
         
+        # Step 0: Translation (conditional)
+        current_text = raw_text
+        translation_used = False
+        
+        if source_language != "English":
+            print(f"\n[Agent 0] Translating from {source_language} to English...")
+            t0 = time.time()
+            trans_result = self.translator_agent.run(raw_text, source_language)
+            current_text = trans_result["translated_text"]
+            timings['translator'] = time.time() - t0
+            translation_used = True
+            
+            # Log result
+            log_api_call("Language Translator", raw_text[:200], current_text[:200])
+            print(f" > Translated Text: {current_text[:100]}...")
+            if not trans_result.get("ok"):
+                print(f"   [Warning] Translation issue: {trans_result.get('error')}")
+        
         # Step 1: Privacy Guard
         print("\n[Agent 1] Anonymizing text...")
         t0 = time.time()
-        anon_result = self.privacy_agent.run(raw_text)
+        anon_result = self.privacy_agent.run(current_text)
         anonymized_text = anon_result["anonymized_text"]
         timings['privacy_guard'] = time.time() - t0
         
         # Log result
-        log_api_call("Privacy Guard", raw_text, anonymized_text)
+        log_api_call("Privacy Guard", current_text, anonymized_text)
         print(f" > Anonymized Text: {anonymized_text[:100]}...")
         if anon_result.get("used_fallback"):
             print(f"   [Warning] Used fallback: {anon_result.get('note')}")
@@ -66,10 +85,20 @@ class ClinicalPipeline:
         timings['total'] = time.time() - pipeline_start
         print(f"\n⏱️  Total Processing Time: {timings['total']:.2f}s")
 
-        return {
+        result = {
             "anonymized_text": anonymized_text,
             "extracted_info": extracted_info,
             "summary": summary,
             "validation_result": validation_output,
             "timings": timings
         }
+        
+        # Add translation info if used
+        if translation_used:
+            result["translation"] = {
+                "source_language": source_language,
+                "original_text": raw_text[:500],  # Store preview
+                "translated_text": current_text[:500]
+            }
+        
+        return result

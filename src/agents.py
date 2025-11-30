@@ -263,7 +263,8 @@ class Summarizer:
 # -------------------------
 class Validator:
     SYSTEM = (
-        "You are a Clinical Safety Auditor. Compare a generated summary against the anonymized source text. "
+        "You are a Clinical Safety Auditor focused on detecting CRITICAL errors in medical summaries. "
+        "Your job is to catch HALLUCINATIONS (fabricated information) and MAJOR INACCURACIES, not minor omissions. "
         "Return a JSON object: {status: 'PASS'|'FAIL', issues: [list], missing_info: [list], hallucinations: [list]}."
     )
 
@@ -273,9 +274,21 @@ class Validator:
 
     def run(self, source_text: str, summary: str) -> Dict[str, Any]:
         prompt = (
-            "Compare SOURCE (anonymized) and SUMMARY. Return JSON with keys: status (PASS/FAIL), "
-            "issues (list of strings), missing_info (list), hallucinations (list). If PASS, issues should be [].\n\n"
-            f"SOURCE:\n{source_text}\n\nSUMMARY:\n{summary}\n\nReturn JSON only."
+            "Compare SOURCE and SUMMARY. Focus on CRITICAL safety issues:\n\n"
+            "**FAIL if:**\n"
+            "- Summary fabricates medications, dosages, or diagnoses NOT in source\n"
+            "- Summary contradicts source (e.g., says patient took med when doctor prescribed it)\n"
+            "- Summary adds clinical information not present in source\n\n"
+            "**PASS if:**\n"
+            "- Summary is accurate even if it omits minor details (location, exact wording)\n"
+            "- Summary uses 'Not documented' for truly missing sections\n"
+            "- Summary correctly attributes actions (patient vs. doctor)\n\n"
+            "Be REASONABLE. Minor omissions are acceptable. Focus on SAFETY.\n\n"
+            f"SOURCE:\n{source_text}\n\n"
+            f"SUMMARY:\n{summary}\n\n"
+            "Return JSON with: status (PASS/FAIL), issues (critical errors only), "
+            "missing_info (CRITICAL omissions only, not minor details), hallucinations (fabricated info).\n"
+            "If PASS, all lists should be empty []."
         )
         try:
             resp = _llm_call_with_logging(prompt=prompt, system=self.SYSTEM, temperature=0.0, max_tokens=self.max_tokens)

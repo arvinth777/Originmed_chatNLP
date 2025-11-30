@@ -260,16 +260,54 @@ if os.path.exists(batch_file):
             st.caption("ROUGE scores measure overlap between generated summaries and source text. Higher is better (0-1 scale).")
             
             # Add comparison chart
-            st.subheader("📊 Performance Comparison")
-            import pandas as pd
-            comparison_data = pd.DataFrame({
-                "ROUGE-1": [rouge['rouge1'], 1.0, 0.05],
-                "ROUGE-2": [rouge['rouge2'], 1.0, 0.01],
-                "ROUGE-L": [rouge['rougeL'], 1.0, 0.03]
-            }, index=["Your Pipeline", "Baseline (No Summary)", "Random Summary"])
+            st.subheader("📊 Benchmark Comparison")
             
-            st.bar_chart(comparison_data)
-            st.caption("**Baseline** = Using raw text as summary (perfect overlap). **Random** = Unrelated text. Your pipeline balances conciseness with information retention.")
+            # Try to load benchmark results
+            import os
+            benchmark_file = "data/benchmark_results.json"
+            
+            if os.path.exists(benchmark_file):
+                import json
+                with open(benchmark_file, 'r') as f:
+                    benchmark = json.load(f)
+                
+                import pandas as pd
+                comparison_data = pd.DataFrame({
+                    "ROUGE-1": [
+                        benchmark['our_pipeline']['rouge1'],
+                        benchmark['baseline_extractive']['rouge1'],
+                        benchmark['baseline_template']['rouge1']
+                    ],
+                    "ROUGE-2": [
+                        benchmark['our_pipeline']['rouge2'],
+                        benchmark['baseline_extractive']['rouge2'],
+                        benchmark['baseline_template']['rouge2']
+                    ],
+                    "ROUGE-L": [
+                        benchmark['our_pipeline']['rougeL'],
+                        benchmark['baseline_extractive']['rougeL'],
+                        benchmark['baseline_template']['rougeL']
+                    ]
+                }, index=["4-Agent Pipeline (Ours)", "Baseline: Extractive", "Baseline: Template"])
+                
+                st.bar_chart(comparison_data)
+                
+                st.caption("""
+                **Interpretation:** Extractive baseline has higher ROUGE (copies source text), but produces unstructured output. 
+                Our pipeline generates **structured SOAP notes** with validation, trading ROUGE score for clinical utility.
+                Template baseline shows why rule-based approaches fail for medical summarization.
+                """)
+            else:
+                # Fallback to original comparison
+                import pandas as pd
+                comparison_data = pd.DataFrame({
+                    "ROUGE-1": [rouge['rouge1'], 1.0, 0.05],
+                    "ROUGE-2": [rouge['rouge2'], 1.0, 0.01],
+                    "ROUGE-L": [rouge['rougeL'], 1.0, 0.03]
+                }, index=["Your Pipeline", "Baseline (No Summary)", "Random Summary"])
+                
+                st.bar_chart(comparison_data)
+                st.caption("**Baseline** = Using raw text as summary (perfect overlap). **Random** = Unrelated text. Your pipeline balances conciseness with information retention.")
             
             st.markdown("---")
     else:
